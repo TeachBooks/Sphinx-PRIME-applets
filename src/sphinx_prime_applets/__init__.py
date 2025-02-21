@@ -4,6 +4,7 @@ from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.directives.patches import Figure
 from typing import Optional
+from sphinx.application import Sphinx
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
 
@@ -115,6 +116,7 @@ class AppletDirective(Figure):
 
 def setup(app):
     app.add_directive("applet", AppletDirective)
+    app.add_css_file('prime_applets.css')
     return {
         "version": "0.1",
         "parallel_read_safe": True,
