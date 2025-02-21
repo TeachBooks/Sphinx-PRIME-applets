@@ -122,8 +122,7 @@ def setup(app):
     }
 
 def write_css(app: Sphinx,exc):
-	    CSS_content = """
-     .applet {
+  CSS_content = """.applet {
   height: 500px;
 }
 
@@ -147,10 +146,9 @@ def write_css(app: Sphinx,exc):
   .applet-print-figure {
     display: initial;
   }
-}
-     """
-	# write the css file
-        staticdir = os.path.join(app.builder.outdir, '_static')
-        filename = os.path.join(staticdir,'prime_applets.css')
-        with open(filename,"w") as css:
-            css.write(CSS_content)	    
+}"""
+  # write the css file
+  staticdir = os.path.join(app.builder.outdir, '_static')
+  filename = os.path.join(staticdir,'prime_applets.css')
+  with open(filename,"w") as css:
+        css.write(CSS_content)	    
