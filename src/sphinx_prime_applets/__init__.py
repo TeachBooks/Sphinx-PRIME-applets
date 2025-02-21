@@ -117,6 +117,7 @@ class AppletDirective(Figure):
 def setup(app):
     app.add_directive("applet", AppletDirective)
     app.add_css_file('prime_applets.css')
+    app.connect("build-finished",write_css)
     return {
         "version": "0.1",
         "parallel_read_safe": True,
