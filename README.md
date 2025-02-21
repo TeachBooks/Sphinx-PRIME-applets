@@ -40,8 +40,6 @@ A title that describes the applet
 
 | Parameter                                                                                                                           | Description                                                                                  | Default      |
 | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------ |
-| `iframe`                                                                                                                            | This parameter is added by default and set to true for each applet in this book.             |
-| \ Therefore, this parameter is not configurable for this book. When using an applet in different context will change the bahaviour. | false                                                                                        |
 | `title`                                                                                                                             | A string that will be shown as the title of the applet when the applet is in fullscreen mode | ""           |
 | `status`                                                                                                                            | The status of the applet. Can be `unreviewed`, `in-review` or `reviewed`                     | `unreviewed` |
 | `width`                                                                                                                             | The width of the applet in pixels                                                            | 100%         |
