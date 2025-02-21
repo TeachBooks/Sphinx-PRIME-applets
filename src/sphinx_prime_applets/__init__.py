@@ -120,3 +120,37 @@ def setup(app):
         "parallel_read_safe": True,
         "parallel_write_safe": True,
     }
+
+def write_css(app: Sphinx,exc):
+	    CSS_content = """
+     .applet {
+  height: 500px;
+}
+
+.applet * {
+  width: 100%;
+  height: 500px; /* TODO: subject for discussion */
+}
+
+.applet-print-figure {
+  display: none;
+}
+
+.applet iframe {
+  border-radius: 10px;
+}
+
+@media print {
+  .applet iframe {
+    display: none;
+  }
+  .applet-print-figure {
+    display: initial;
+  }
+}
+     """
+	# write the css file
+        staticdir = os.path.join(app.builder.outdir, '_static')
+        filename = os.path.join(staticdir,'prime_applets.css')
+        with open(filename,"w") as css:
+            css.write(CSS_content)	    
