@@ -69,3 +69,9 @@ A title that describes the applet
 | ---------- | -------------------------------------------- | ------- |
 | position3D | The position of the applet in the 3D plane   | 0,0,0   |
 | zoom3D     | The zoom level of the applet in the 3D plane | 1       |
+
+## Contribute
+
+This tool's repository is stored on [GitHub](https://github.com/TeachBooks/Sphinx-PRIME-applets). If you'd like to contribute, you can create a fork and open a pull request on the [GitHub repository](https://github.com/TeachBooks/Sphinx-PRIME-applets).
+
+The `README.md` of the branch `manual` is also part of the [TeachBooks manual](https://teachbooks.io/manual/intro.html) as a submodule.
