@@ -1,5 +1,12 @@
 # Sphinx Extension: PRIME applets
 
+```{admonition} User types
+:class: tip
+This section is useful for user type 3-5.
+```
++++
+{bdg-primary}`Sphinx Extension`
+
 ## Introduction
 
 This extension provides an interface to include [PRIME applets](https://openla.ewi.tudelft.nl/) with relative ease.
@@ -73,3 +80,9 @@ You should add split-\* before the parameter to make it apply to the right scene
 | ---------- | -------------------------------------------- | ------- |
 | position3D | The position of the applet in the 3D plane   | 0,0,0   |
 | zoom3D     | The zoom level of the applet in the 3D plane | 1       |
+
+## Contribute
+
+This tool's repository is stored on [GitHub](https://github.com/TeachBooks/Sphinx-PRIME-applets). If you'd like to contribute, you can create a fork and open a pull request on the [GitHub repository](https://github.com/TeachBooks/Sphinx-PRIME-applets).
+
+The `README.md` of the branch `manual` is also part of the [TeachBooks manual](https://teachbooks.io/manual/intro.html) as a submodule.
