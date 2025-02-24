@@ -1,4 +1,4 @@
-# Sphinx Extension: PRIME applets
+# PRIME applets
 
 ```{admonition} User types
 :class: tip
