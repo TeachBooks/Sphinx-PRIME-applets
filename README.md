@@ -18,8 +18,9 @@ A plane through the point $P$.
 ```
 ````
 
-> [!NOTE]
-> The `url` parameter should be the part of the URL after `/applet/`. So if the full URL is `https://openla.ewi.tudelft.nl/applet/lines_and_planes/normal_equation_plane_origin`, you should set the parameter to `lines_and_planes/normal_equation_plane_origin`.
+::::{note}
+The `url` parameter should be the part of the URL after `/applet/`. So if the full URL is `https://openla.ewi.tudelft.nl/applet/lines_and_planes/normal_equation_plane_origin`, you should set the parameter to `lines_and_planes/normal_equation_plane_origin`.
+::::
 
 ## Parameters for an applet
 
@@ -47,13 +48,15 @@ A title that describes the applet
 
 ### Control parameters
 
-> [!WARNING]
-> Work in progress
+::::{warning}
+Work in progress
+::::
 
 ### 2D Specific parameters
 
-> [!TIP]
-> You should add split-\* before the parameter to make it apply to the right scene
+::::{tip}
+You should add split-\* before the parameter to make it apply to the right scene
+::::
 
 | Parameter  | Description                                  | Default |
 | ---------- | -------------------------------------------- | ------- |
@@ -62,8 +65,9 @@ A title that describes the applet
 
 ### 3D Specific parameters
 
-> [!TIP]
-> You should add split-\* before the parameter to make it apply to the right scene
+::::{tip}
+You should add split-\* before the parameter to make it apply to the right scene
+::::
 
 | Parameter  | Description                                  | Default |
 | ---------- | -------------------------------------------- | ------- |
