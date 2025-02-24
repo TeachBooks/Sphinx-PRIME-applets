@@ -4,6 +4,42 @@
 
 This extension provides an interface to include [PRIME applets](https://openla.ewi.tudelft.nl/) with relative ease.
 
+## What does it do?
+
+This extension provides one Sphinx directives (`applet`) that can be used to quickly insert a PRIME applet.
+
+## Installation
+To use this extenstion, follow these steps:
+
+**Step 1: Install the Package**
+
+Install the module `sphinx-prime-applets` package using `pip`:
+```
+pip install sphinx-prime-applets
+```
+    
+**Step 2: Add to `requirements.txt`**
+
+Make sure that the package is included in your project's `requirements.txt` to track the dependency:
+```
+sphinx-prime-applets
+```
+
+**Step 3: Enable in `_config.yml`**
+
+In your `_config.yml` file, add the extension to the list of Sphinx extra extensions (**important**: underscore, not dash this time):
+```
+sphinx: 
+    extra_extensions:
+        .
+        .
+        .
+        - sphinx_prime_applets
+        .
+        .
+        .
+```
+
 ## Applet directive
 
 ````md
