@@ -101,9 +101,7 @@ class AppletDirective(Figure):
         full_url = f'{base_url}{url}{"?" if params else ""}{params}'
         applet_html = f"""
 			<div class="applet" style="{style}; ">
-				<noscript class="loading-lazy">
 					<iframe class="{iframe_class}" src="{full_url}" allow="fullscreen" loading="lazy" frameborder="0"></iframe>
-				</noscript>
 			</div>
 		"""
         applet_node = nodes.raw(None, applet_html, format="html")
