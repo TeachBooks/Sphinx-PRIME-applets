@@ -1,5 +1,4 @@
-# PRIME applets
-
+````{margin}
 ```{attributiongrey} Attribution
 :class: attribution
 This page reuses MIT licensed content from {cite:t}`sphinx-prime-applets`. {fa}`quote-left`{ref}`Find out more here.<external_resources>`
@@ -11,8 +10,9 @@ This section is useful for user type 3-5.
 ```
 +++
 {bdg-primary}`Sphinx Extension`
+````
 
-## Introduction
+# PRIME applets
 
 This extension provides an interface to include [PRIME applets](https://openla.ewi.tudelft.nl/) with relative ease.
 
