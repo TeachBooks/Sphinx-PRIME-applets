@@ -138,11 +138,6 @@ def write_css(app: Sphinx,exc):
 
 .applet iframe {
   border-radius: 10px;
-  mix-blend-mode: darken;
-}
-
-html[data-theme="dark"] .applet iframe {
-  mix-blend-mode: plus-lighter;
 }
 
 @media print {
