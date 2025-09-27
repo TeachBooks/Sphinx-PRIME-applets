@@ -126,4 +126,4 @@ You should add split-\* before the parameter to make it apply to the right scene
 
 This tool's repository is stored on [GitHub](https://github.com/TeachBooks/Sphinx-PRIME-applets). If you'd like to contribute, you can create a fork and open a pull request on the [GitHub repository](https://github.com/TeachBooks/Sphinx-PRIME-applets).
 
-The `README.md` of the branch `manual` is also part of the [TeachBooks manual](https://teachbooks.io/manual/intro.html) as a submodule.
+The `README.md` of the branch `manual` is also part of the TeachBooks manual (this file) as a submodule.
