@@ -7,6 +7,9 @@ from typing import Optional
 from sphinx.application import Sphinx
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
+# Temporary URL for screenshots, to be replaced with permanent one later.
+# See https://github.com/PRIME-TU-Delft/Open-LA-Applets/pull/298
+DEFAULT_SCREENSHOTS_URL = "https://deploy-preview-298--playful-otter-9e0500.netlify.app/screenshots/"
 
 def generate_style(height: Optional[str], width: Optional[str]):
 	'''
@@ -70,8 +73,11 @@ class AppletDirective(Figure):
         fig = self.options.get("fig")
 
         assert url is not None
-        assert fig is not None
-
+        if fig is None:
+            if "?" in url:
+              url, _ = url.split("?", 1)
+            fig = DEFAULT_SCREENSHOTS_URL + url.replace("/", "_") + ".png"
+        
         iframe_class = self.options.get("class")  # expect a list/string of classes
 
         if iframe_class is None:
@@ -93,6 +99,17 @@ class AppletDirective(Figure):
         params = "&".join(
             [f"{key}={quote(value)}" for key, value in params_dict.items()]
         )
+        # 1. extract params from url and prepend to params
+        if "?" in url:
+            url, extra_params = url.split("?", 1)
+            params = extra_params + "&" + params
+        # 2. remove language from params if already present
+        params_parts = params.split("&")
+        params_parts = [part for part in params_parts if not part.startswith("lang=")]
+        params = "&".join(params_parts)
+        # 3. Add language parameter based on document language
+        lang = self.state.document.settings.env.config.language
+        params = f"lang={lang}" + "&" + params
         style = generate_style(
             self.options.get("width", None), self.options.get("height", None)
         )
