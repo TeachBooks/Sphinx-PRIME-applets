@@ -91,11 +91,12 @@ class AppletDirective(Figure):
         (figure_node,) = Figure.run(self)
 
         # Generate GET params and inline styling
+        # we do not perform validation or sanitization
         params_dict = parse_options(self.options)
         params_dict["iframe"] = (
             "true"  # To let the applet know its being run in an iframe
         )
-        if url_params:
+        if url_params != "":
             for param in url_params.split("&"):
                 if "=" in param:
                     key, value = param.split("=", 1)
@@ -106,7 +107,7 @@ class AppletDirective(Figure):
         lang = self.state.document.settings.env.config.language
         if lang is None:
             lang = "en"
-        params_dict["lang"] = lang
+        params_dict["lang"] = lang # language is always overwritten
         params = "&".join(
             [f"{key}={quote(value)}" for key, value in params_dict.items()]
         )
