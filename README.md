@@ -21,7 +21,7 @@ This extension provides an interface to include [PRIME applets](https://openla.e
 This extension provides one Sphinx directives (`applet`) that can be used to quickly insert a PRIME applet.
 
 ## Installation
-To use this extenstion, follow these steps:
+To use this extension, follow these steps:
 
 **Step 1: Install the Package**
 
