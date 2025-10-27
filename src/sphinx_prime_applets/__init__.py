@@ -104,6 +104,8 @@ class AppletDirective(Figure):
                     params_dict[param] = "true"
         # overwrite language based on document language
         lang = self.state.document.settings.env.config.language
+        if lang is None:
+            lang = "en"
         params_dict["lang"] = lang
         params = "&".join(
             [f"{key}={quote(value)}" for key, value in params_dict.items()]
