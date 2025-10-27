@@ -72,7 +72,7 @@ The `url` parameter should be the part of the URL after `/applet/`. So if the fu
 
 ## Parameters for an applet
 
-Some parameters can be set for an applet. Only the `url`, `fig` and `name` parameters are required; the rest is optional. It is recommended to add a `status` to the applet, which can be `unreviewed`, `in-review` or `reviewed`.
+Some parameters can be set for an applet. Only the `url` and `name` parameters are required; the rest is optional. It is recommended to add a `status` to the applet, which can be `unreviewed`, `in-review` or `reviewed`.
 
 ````md
 ```{applet}
@@ -89,10 +89,14 @@ A title that describes the applet
 
 | Parameter                                                                                                                           | Description                                                                                  | Default      |
 | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------ |
+| `fig`                                                                                                                               | The path to an image that will be shown in the print version of the document                  | None         |
 | `title`                                                                                                                             | A string that will be shown as the title of the applet when the applet is in fullscreen mode | ""           |
 | `status`                                                                                                                            | The status of the applet. Can be `unreviewed`, `in-review` or `reviewed`                     | `unreviewed` |
 | `width`                                                                                                                             | The width of the applet in pixels                                                            | 100%         |
 | `height`                                                                                                                            | The height of the applet in pixels                                                           | 400px        |
+
+> [!NOTE]
+> If the `fig` parameter is not defined, the code will insert the image provided by the applet itself as a fallback.
 
 ### Control parameters
 
@@ -126,4 +130,4 @@ You should add split-\* before the parameter to make it apply to the right scene
 
 This tool's repository is stored on [GitHub](https://github.com/TeachBooks/Sphinx-PRIME-applets). If you'd like to contribute, you can create a fork and open a pull request on the [GitHub repository](https://github.com/TeachBooks/Sphinx-PRIME-applets).
 
-The `README.md` of the branch `manual` is also part of the TeachBooks manual (this file) as a submodule.
+The `README.md` of the branch `manual` is also part of the [TeachBooks manual](https://teachbooks.io/manual/intro.html) as a submodule.

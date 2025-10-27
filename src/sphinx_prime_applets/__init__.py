@@ -70,8 +70,13 @@ class AppletDirective(Figure):
         fig = self.options.get("fig")
 
         assert url is not None
-        assert fig is not None
-
+        if "?" in url:
+             url, url_params = url.split("?", 1)
+        else:
+             url_params = ""
+        if fig is None:
+            fig = DEFAULT_BASE_URL + url + "/image.png"
+        
         iframe_class = self.options.get("class")  # expect a list/string of classes
 
         if iframe_class is None:
@@ -86,10 +91,23 @@ class AppletDirective(Figure):
         (figure_node,) = Figure.run(self)
 
         # Generate GET params and inline styling
+        # we do not perform validation or sanitization
         params_dict = parse_options(self.options)
         params_dict["iframe"] = (
             "true"  # To let the applet know its being run in an iframe
         )
+        if url_params != "":
+            for param in url_params.split("&"):
+                if "=" in param:
+                    key, value = param.split("=", 1)
+                    params_dict[key] = value
+                else:
+                    params_dict[param] = "true"
+        # overwrite language based on document language
+        lang = self.state.document.settings.env.config.language
+        if lang is None:
+            lang = "en"
+        params_dict["lang"] = lang  # language is always overwritten
         params = "&".join(
             [f"{key}={quote(value)}" for key, value in params_dict.items()]
         )
@@ -101,9 +119,7 @@ class AppletDirective(Figure):
         full_url = f'{base_url}{url}{"?" if params else ""}{params}'
         applet_html = f"""
 			<div class="applet" style="{style}; ">
-				<noscript class="loading-lazy">
-					<iframe class="{iframe_class}" src="{full_url}" allow="fullscreen" loading="lazy" frameborder="0"></iframe>
-				</noscript>
+					<iframe class="prime-applet {iframe_class}" src="{full_url}" allow="fullscreen" loading="lazy" frameborder="0"></iframe>
 			</div>
 		"""
         applet_node = nodes.raw(None, applet_html, format="html")
