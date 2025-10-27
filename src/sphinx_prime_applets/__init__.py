@@ -95,13 +95,13 @@ class AppletDirective(Figure):
         params_dict["iframe"] = (
             "true"  # To let the applet know its being run in an iframe
         )
-        url_params = url_params.split("&")
-        for param in url_params:
-            if "=" in param:
-                key, value = param.split("=", 1)
-                params_dict[key] = value
-            else:
-                params_dict[param] = "true"
+        if url_params:
+            for param in url_params.split("&"):
+                if "=" in param:
+                    key, value = param.split("=", 1)
+                    params_dict[key] = value
+                else:
+                    params_dict[param] = "true"
         # overwrite language based on document language
         lang = self.state.document.settings.env.config.language
         params_dict["lang"] = lang
