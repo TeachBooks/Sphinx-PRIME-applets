@@ -7,9 +7,6 @@ from typing import Optional
 from sphinx.application import Sphinx
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
-# Temporary URL for screenshots, to be replaced with permanent one later.
-# See https://github.com/PRIME-TU-Delft/Open-LA-Applets/pull/298
-DEFAULT_SCREENSHOTS_URL = "https://deploy-preview-298--playful-otter-9e0500.netlify.app/screenshots/"
 
 def generate_style(height: Optional[str], width: Optional[str]):
 	'''
@@ -73,10 +70,12 @@ class AppletDirective(Figure):
         fig = self.options.get("fig")
 
         assert url is not None
+        if "?" in url:
+             url, url_params = url.split("?", 1)
+        else:
+             url_params = ""
         if fig is None:
-            if "?" in url:
-              url, _ = url.split("?", 1)
-            fig = DEFAULT_SCREENSHOTS_URL + url.replace("/", "_") + ".png"
+            fig = DEFAULT_BASE_URL + url + "/image.png"
         
         iframe_class = self.options.get("class")  # expect a list/string of classes
 
@@ -96,20 +95,19 @@ class AppletDirective(Figure):
         params_dict["iframe"] = (
             "true"  # To let the applet know its being run in an iframe
         )
+        url_params = url_params.split("&")
+        for param in url_params:
+            if "=" in param:
+                key, value = param.split("=", 1)
+                params_dict[key] = value
+            else:
+                params_dict[param] = "true"
+        # overwrite language based on document language
+        lang = self.state.document.settings.env.config.language
+        params_dict["lang"] = lang
         params = "&".join(
             [f"{key}={quote(value)}" for key, value in params_dict.items()]
         )
-        # 1. extract params from url and prepend to params
-        if "?" in url:
-            url, extra_params = url.split("?", 1)
-            params = extra_params + "&" + params
-        # 2. remove language from params if already present
-        params_parts = params.split("&")
-        params_parts = [part for part in params_parts if not part.startswith("lang=")]
-        params = "&".join(params_parts)
-        # 3. Add language parameter based on document language
-        lang = self.state.document.settings.env.config.language
-        params = f"lang={lang}" + "&" + params
         style = generate_style(
             self.options.get("width", None), self.options.get("height", None)
         )
