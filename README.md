@@ -1,18 +1,6 @@
-````{margin}
-```{attributiongrey} Attribution
-:class: attribution
-This page reuses MIT licensed content from {cite:t}`sphinx-prime-applets`. {fa}`quote-left`{ref}`Find out more here.<external_resources>`
-```
+# Sphinx Extension: PRIME applets
 
-```{admonition} User types
-:class: tip
-This section is useful for user type 3-5.
-```
-+++
-{bdg-primary}`Sphinx Extension`
-````
-
-# PRIME applets
+## Introduction
 
 This extension provides an interface to include [PRIME applets](https://openla.ewi.tudelft.nl/) with relative ease.
 
@@ -66,9 +54,8 @@ A plane through the point $P$.
 ```
 ````
 
-::::{note}
-The `url` parameter should be the part of the URL after `/applet/`. So if the full URL is `https://openla.ewi.tudelft.nl/applet/lines_and_planes/normal_equation_plane_origin`, you should set the parameter to `lines_and_planes/normal_equation_plane_origin`.
-::::
+> [!NOTE]
+> The `url` parameter should be the part of the URL after `/applet/`. So if the full URL is `https://openla.ewi.tudelft.nl/applet/lines_and_planes/normal_equation_plane_origin`, you should set the parameter to `lines_and_planes/normal_equation_plane_origin`.
 
 ## Parameters for an applet
 
@@ -100,15 +87,13 @@ A title that describes the applet
 
 ### Control parameters
 
-::::{warning}
-Work in progress
-::::
+> [!WARNING]
+> Work in progress
 
 ### 2D Specific parameters
 
-::::{tip}
-You should add split-\* before the parameter to make it apply to the right scene
-::::
+> [!TIP]
+> You should add split-\* before the parameter to make it apply to the right scene
 
 | Parameter  | Description                                  | Default |
 | ---------- | -------------------------------------------- | ------- |
@@ -117,9 +102,8 @@ You should add split-\* before the parameter to make it apply to the right scene
 
 ### 3D Specific parameters
 
-::::{tip}
-You should add split-\* before the parameter to make it apply to the right scene
-::::
+> [!TIP]
+> You should add split-\* before the parameter to make it apply to the right scene
 
 | Parameter  | Description                                  | Default |
 | ---------- | -------------------------------------------- | ------- |
