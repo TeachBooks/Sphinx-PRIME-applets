@@ -115,3 +115,10 @@ A title that describes the applet
 This tool's repository is stored on [GitHub](https://github.com/TeachBooks/Sphinx-PRIME-applets). If you'd like to contribute, you can create a fork and open a pull request on the [GitHub repository](https://github.com/TeachBooks/Sphinx-PRIME-applets).
 
 The `README.md` of the branch `manual` is also part of the [TeachBooks manual](https://teachbooks.io/manual/intro.html) as a submodule.
+
+## Metadata
+
+By default the applet directive adds metadata to the figure node it creates. This metadata includes information such as author, license, copyright, and source. This information is useful for documentation and attribution purposes. If you want to disable this feature, you can set the `prime_applets_metadata` configuration option to `False` in your Sphinx configuration file.
+
+> [!NOTE]
+> This extension always loads the extension `sphinx_metadata_figure` as it depends on it to add metadata to the figures. This means that also the configuration options of that extension are available and if this is not desired, you must disable the workings of that extensions by applying appropriate settings in `metadata_figure_settings` in your Sphinx configuration file. See the [documentation](https://teachbooks.io/manual/_git/github.com_TeachBooks_Sphinx-Metadata-Figure/main/MANUAL.html) of the `sphinx_metadata_figure` extension for more information.

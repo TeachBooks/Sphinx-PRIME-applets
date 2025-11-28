@@ -2,9 +2,10 @@ import os
 from urllib.parse import quote
 from docutils import nodes
 from docutils.parsers.rst import directives
-from sphinx.directives.patches import Figure
 from typing import Optional
 from sphinx.application import Sphinx
+from sphinx.directives.patches import Figure
+from sphinx_metadata_figure import MetadataFigure
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
 
@@ -44,8 +45,8 @@ def parse_options(options: dict) -> dict:
 
 	return {key: parse_value(val) for key, val in options.items() if key in applet_keys and val != ''}
 
-class AppletDirective(Figure):
-    option_spec = Figure.option_spec.copy()
+class AppletDirective(MetadataFigure):
+    option_spec = MetadataFigure.option_spec.copy()
     option_spec.update(
         {
             "url": directives.unchanged_required,
@@ -88,7 +89,21 @@ class AppletDirective(Figure):
 
         self.arguments = [fig]
         self.options["class"] = ["applet-print-figure"]
-        (figure_node,) = Figure.run(self)
+
+        # Access environment/config for whether to use metadata figure
+        env = getattr(self.state.document.settings, 'env', None)
+        config = getattr(env.app, 'config', None) if env else None
+        metadata = getattr(config, 'prime_applets_metadata', True) if config else True
+        if metadata:
+            # Use MetadataFigure to add metadata to the figure
+            self.options["author"] = "PRIME Graphics Group"
+            self.options["license"] = "Apache-2.0"
+            self.options["copyright"] = "© TU Delft"
+            self.options["source"] = "[Open-LA-Applets](https://github.com/PRIME-TU-Delft/Open-LA-Applets)"
+            (figure_node,) = MetadataFigure.run(self)
+        else:
+            # Just create a normal figure node without metadata
+            (figure_node,) = Figure.run(self)
 
         # Generate GET params and inline styling
         # we do not perform validation or sanitization
@@ -129,8 +144,9 @@ class AppletDirective(Figure):
 
         return [figure_node]
 
-
 def setup(app):
+    app.setup_extension('sphinx_metadata_figure')
+    app.add_config_value("prime_applets_metadata", True, "env")
     app.add_directive("applet", AppletDirective)
     app.add_css_file('prime_applets.css')
     app.connect("build-finished",write_css)
