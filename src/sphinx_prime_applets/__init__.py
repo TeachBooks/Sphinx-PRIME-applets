@@ -105,10 +105,20 @@ class AppletDirective(MetadataFigure):
             style_settings = metadata_settings.get('style', {})
             if style_settings.get('placement', 'caption') not in ['margin', 'admonition']:
                 self.options["placement"] = 'caption'
-            (figure_node,) = MetadataFigure.run(self)
+                (figure_node,) = MetadataFigure.run(self)
+                other_nodes = None
+            elif style_settings.get('placement', 'caption') == 'admonition':
+                figure_nodes = MetadataFigure.run(self)
+                figure_node = figure_nodes[0]
+                other_nodes = figure_nodes[1]
+            elif style_settings.get('placement', 'caption') == 'margin':
+                figure_nodes = MetadataFigure.run(self)
+                figure_node = figure_nodes[1]
+                other_nodes = figure_nodes[0]
         else:
             # Just create a normal figure node without metadata
             (figure_node,) = Figure.run(self)
+            other_nodes = None
 
         # Generate GET params and inline styling
         # we do not perform validation or sanitization
@@ -147,8 +157,18 @@ class AppletDirective(MetadataFigure):
         # Add applet as the first child node of figure
         figure_node.insert(0, applet_node)
 
-        return [figure_node]
-
+        if metadata:
+            metadata_settings = getattr(config, 'metadata_figure_settings', {}) if config else {}
+            style_settings = metadata_settings.get('style', {})
+            if style_settings.get('placement', 'caption') not in ['margin', 'admonition']:
+                return [figure_node]
+            elif style_settings.get('placement', 'caption') == 'admonition':
+                return [figure_node] + [other_nodes]
+            elif style_settings.get('placement', 'caption') == 'margin':
+                return [other_nodes] + [figure_node]
+        else:
+            return [figure_node]
+        
 def setup(app):
     app.setup_extension('sphinx_metadata_figure')
     app.add_config_value("prime_applets_metadata", True, "env")
