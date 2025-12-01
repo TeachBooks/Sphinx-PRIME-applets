@@ -103,15 +103,16 @@ class AppletDirective(MetadataFigure):
             # force placement to caption, unless margin or admonition is used as default
             metadata_settings = getattr(config, 'metadata_figure_settings', {}) if config else {}
             style_settings = metadata_settings.get('style', {})
-            if style_settings.get('placement', 'caption') not in ['margin', 'admonition']:
+            placement = self.options.get('placement', style_settings.get('placement', 'caption'))
+            if placement not in ['margin', 'admonition']: # hide is always overruled to caption
                 self.options["placement"] = 'caption'
                 (figure_node,) = MetadataFigure.run(self)
                 other_nodes = None
-            elif style_settings.get('placement', 'caption') == 'admonition':
+            elif placement == 'admonition':
                 figure_nodes = MetadataFigure.run(self)
                 figure_node = figure_nodes[0]
                 other_nodes = figure_nodes[1]
-            elif style_settings.get('placement', 'caption') == 'margin':
+            elif placement == 'margin':
                 figure_nodes = MetadataFigure.run(self)
                 figure_node = figure_nodes[1]
                 other_nodes = figure_nodes[0]
