@@ -100,6 +100,11 @@ class AppletDirective(MetadataFigure):
             self.options["license"] = "Apache-2.0"
             self.options["copyright"] = "© TU Delft"
             self.options["source"] = "[Open-LA-Applets](https://github.com/PRIME-TU-Delft/Open-LA-Applets)"
+            # force placement to caption, unless margin or admonition is used as default
+            metadata_settings = getattr(config, 'metadata_figure_settings', {}) if config else {}
+            style_settings = metadata_settings.get('style', {})
+            if style_settings.get('placement', 'caption') not in ['margin', 'admonition']:
+                self.options["placement"] = 'caption'
             (figure_node,) = MetadataFigure.run(self)
         else:
             # Just create a normal figure node without metadata
