@@ -94,17 +94,15 @@ class AppletDirective(MetadataFigure):
         env = getattr(self.state.document.settings, 'env', None)
         config = getattr(env.app, 'config', None) if env else None
         metadata = getattr(config, 'prime_applets_metadata', True) if config else True
-        self.options["author"] = "PRIME Graphics Group"
-        self.options["license"] = "Apache-2.0"
-        self.options["copyright"] = "© TU Delft"
-        self.options["source"] = "[Open-LA-Applets](https://github.com/PRIME-TU-Delft/Open-LA-Applets)"
         if metadata:
             # Use MetadataFigure to add metadata to the figure
-            self.options['placement'] = 'caption'
+            self.options["author"] = "PRIME Graphics Group"
+            self.options["license"] = "Apache-2.0"
+            self.options["copyright"] = "© TU Delft"
+            self.options["source"] = "[Open-LA-Applets](https://github.com/PRIME-TU-Delft/Open-LA-Applets)"
             (figure_node,) = MetadataFigure.run(self)
         else:
             # Just create a normal figure node without metadata
-            self.options['placement'] = 'hide'
             (figure_node,) = Figure.run(self)
 
         # Generate GET params and inline styling
