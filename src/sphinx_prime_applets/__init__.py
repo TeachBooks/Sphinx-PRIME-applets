@@ -158,13 +158,11 @@ class AppletDirective(MetadataFigure):
         figure_node.insert(0, applet_node)
 
         if metadata:
-            metadata_settings = getattr(config, 'metadata_figure_settings', {}) if config else {}
-            style_settings = metadata_settings.get('style', {})
-            if style_settings.get('placement', 'caption') not in ['margin', 'admonition']:
+            if self.options["placement"] not in ['margin', 'admonition']:
                 return [figure_node]
-            elif style_settings.get('placement', 'caption') == 'admonition':
+            elif self.options["placement"] == 'admonition':
                 return [figure_node] + [other_nodes]
-            elif style_settings.get('placement', 'caption') == 'margin':
+            elif self.options["placement"] == 'margin':
                 return [other_nodes] + [figure_node]
         else:
             return [figure_node]
