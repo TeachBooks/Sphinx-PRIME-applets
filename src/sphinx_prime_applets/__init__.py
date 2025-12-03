@@ -6,8 +6,40 @@ from typing import Optional
 from sphinx.application import Sphinx
 from sphinx.directives.patches import Figure
 from sphinx_metadata_figure import MetadataFigure
+import requests
+from datetime import datetime
+
+TOKEN = os.getenv("GITHUB_TOKEN")
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
+
+def get_last_modified_date(file_url, token=TOKEN):
+    # Extract parts from the GitHub URL
+    parts = file_url.split('/')
+    owner = parts[3]
+    repo = parts[4]
+    branch = parts[6]  # branch name comes after 'blob'
+    file_path = '/'.join(parts[7:])  # file path after branch
+    
+    # GitHub API endpoint
+    api_url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+    params = {'path': file_path, 'sha': branch, 'per_page': 1}
+    
+    headers = {}
+    if token:
+        headers['Authorization'] = f'token {token}'
+    
+    response = requests.get(api_url, params=params, headers=headers)
+    response.raise_for_status()
+    
+    data = response.json()
+    if data:
+        # Extract the date and format it as YYYY-MM-DD
+        iso_date = data[0]['commit']['author']['date']
+        formatted_date = datetime.fromisoformat(iso_date.replace('Z', '+00:00')).strftime('%Y-%m-%d')
+        return formatted_date
+    else:
+        return None
 
 def generate_style(height: Optional[str], width: Optional[str]):
 	'''
@@ -96,10 +128,17 @@ class AppletDirective(MetadataFigure):
         metadata = getattr(config, 'prime_applets_metadata', True) if config else True
         if metadata:
             # Use MetadataFigure to add metadata to the figure
-            self.options["author"] = "PRIME Graphics Group"
-            self.options["license"] = "Apache-2.0"
-            self.options["copyright"] = "© TU Delft"
-            self.options["source"] = "[Open-LA-Applets](https://github.com/PRIME-TU-Delft/Open-LA-Applets)"
+            self.options["author"] = self.options["author"] if "author" in self.options else "PRIME"
+            self.options["license"] = self.options["license"] if "license" in self.options else "CC-BY"
+            repo_url = f"https://github.com/PRIME-TU-Delft/Open-LA-Applets/blob/main/src/routes/applet/{url}"
+            last_modified_date = get_last_modified_date(repo_url)
+            if last_modified_date:
+                self.options["date"] = self.options["date"] if "date" in self.options else last_modified_date
+                year = last_modified_date.split("-")[0]
+                self.options["copyright"] = self.options["copyright"] if "copyright" in self.options else f"© TU Delft {year}"
+            else:
+                self.options["copyright"] = self.options["copyright"] if "copyright" in self.options else "© TU Delft"
+            self.options["source"] = self.options["source"] if "source" in self.options else f"[Open-LA-Applets]({repo_url})"
             # force placement to caption, unless margin or admonition is used as default
             metadata_settings = getattr(config, 'metadata_figure_settings', {}) if config else {}
             style_settings = metadata_settings.get('style', {})
