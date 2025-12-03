@@ -8,6 +8,9 @@ from sphinx.directives.patches import Figure
 from sphinx_metadata_figure import MetadataFigure
 import requests
 from datetime import datetime
+from sphinx.util import logging
+
+logger = logging.getLogger(__name__)
 
 TOKEN = os.getenv("GITHUB_TOKEN")
 
@@ -208,6 +211,9 @@ class AppletDirective(MetadataFigure):
             return [figure_node]
         
 def setup(app):
+
+    if TOKEN is None:
+        logger.warning("GITHUB_TOKEN environment variable not set. Rate limiting may occur when fetching last modified dates from GitHub.",color='green')
     app.setup_extension('sphinx_metadata_figure')
     app.add_config_value("prime_applets_metadata", True, "env")
     app.add_directive("applet", AppletDirective)
