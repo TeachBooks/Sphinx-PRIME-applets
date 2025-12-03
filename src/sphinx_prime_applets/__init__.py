@@ -207,11 +207,11 @@ class AppletDirective(MetadataFigure):
         figure_node.insert(0, applet_node)
 
         if metadata:
-            if self.options["placement"] not in ['margin', 'admonition']:
+            if self.options.get('placement', style_settings.get('placement', 'caption')) not in ['margin', 'admonition']:
                 return [figure_node]
-            elif self.options["placement"] == 'admonition':
+            elif self.options.get('placement', style_settings.get('placement', 'caption')) == 'admonition':
                 return [figure_node] + [other_nodes]
-            elif self.options["placement"] == 'margin':
+            elif self.options.get('placement', style_settings.get('placement', 'caption')) == 'margin':
                 return [other_nodes] + [figure_node]
         else:
             return [figure_node]
