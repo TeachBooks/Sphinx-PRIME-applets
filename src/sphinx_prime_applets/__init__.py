@@ -155,10 +155,12 @@ class AppletDirective(MetadataFigure):
                 (figure_node,) = MetadataFigure.run(self)
                 other_nodes = None
             elif placement == 'admonition':
+                self.options["placement"] = 'admonition'
                 figure_nodes = MetadataFigure.run(self)
                 figure_node = figure_nodes[0]
                 other_nodes = figure_nodes[1]
             elif placement == 'margin':
+                self.options["placement"] = 'margin'
                 figure_nodes = MetadataFigure.run(self)
                 figure_node = figure_nodes[1]
                 other_nodes = figure_nodes[0]
