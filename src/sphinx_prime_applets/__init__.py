@@ -214,6 +214,8 @@ def setup(app):
 
     if TOKEN is None:
         logger.warning("GITHUB_TOKEN environment variable not set. Rate limiting may occur when fetching last modified dates from GitHub.",color='green')
+    else:
+        logger.info(f"GITHUB_TOKEN {TOKEN} found. Using it to fetch last modified dates from GitHub.",color='green')
     app.setup_extension('sphinx_metadata_figure')
     app.add_config_value("prime_applets_metadata", True, "env")
     app.add_directive("applet", AppletDirective)
