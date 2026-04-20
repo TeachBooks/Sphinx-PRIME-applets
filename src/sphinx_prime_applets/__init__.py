@@ -106,6 +106,11 @@ class AppletDirective(MetadataFigure):
     required_arguments = 0
 
     def run(self):
+
+        # Access environment/config for whether to use metadata figure
+        env = getattr(self.state.document.settings, 'env', None)
+        config = getattr(env.app, 'config', None) if env else None
+        
         url = self.options.get("url")
         fig = self.options.get("fig")
 
@@ -129,9 +134,6 @@ class AppletDirective(MetadataFigure):
         self.arguments = [fig]
         self.options["class"] = ["applet-print-figure"]
 
-        # Access environment/config for whether to use metadata figure
-        env = getattr(self.state.document.settings, 'env', None)
-        config = getattr(env.app, 'config', None) if env else None
         metadata = getattr(config, 'prime_applets_metadata', True) if config else True
         if metadata:
             # Use MetadataFigure to add metadata to the figure
