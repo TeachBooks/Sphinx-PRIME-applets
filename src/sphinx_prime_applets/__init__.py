@@ -107,10 +107,11 @@ class AppletDirective(MetadataFigure):
 
     def run(self):
 
-        # Access environment/config for whether to use metadata figure
+        # Access environment/config
         env = getattr(self.state.document.settings, 'env', None)
         config = getattr(env.app, 'config', None) if env else None
-        
+        base_url = config.prime_applets_base_url if config and hasattr(config, 'prime_applets_base_url') else DEFAULT_BASE_URL
+
         url = self.options.get("url")
         fig = self.options.get("fig")
 
@@ -120,7 +121,7 @@ class AppletDirective(MetadataFigure):
         else:
              url_params = ""
         if fig is None:
-            fig = self.env.config.prime_applets_base_url + url + "/image.png"
+            fig = base_url + url + "/image.png"
         
         iframe_class = self.options.get("class")  # expect a list/string of classes
 
@@ -196,7 +197,6 @@ class AppletDirective(MetadataFigure):
             self.options.get("width", None), self.options.get("height", None)
         )
 
-        base_url = self.env.config.prime_applets_base_url
         full_url = f'{base_url}{url}{"?" if params else ""}{params}'
         applet_html = f"""
 			<div class="applet" style="{style}; ">
