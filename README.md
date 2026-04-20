@@ -57,6 +57,22 @@ A plane through the point $P$.
 > [!NOTE]
 > The `url` parameter should be the part of the URL after `/applet/`. So if the full URL is `https://openla.ewi.tudelft.nl/applet/lines_and_planes/normal_equation_plane_origin`, you should set the parameter to `lines_and_planes/normal_equation_plane_origin`.
 
+## Setting the base URL
+
+By default, the extension uses `https://openla.ewi.tudelft.nl/applet/` as the base URL for the applets. If you want to change this, you can set the `prime_applets_base_url` configuration option in your Sphinx configuration file to the desired base URL. For example:
+```python
+# In your Sphinx configuration file (e.g., conf.py)
+prime_applets_base_url = "https://my-custom-url.com/applet/"
+```
+
+or in YAML format:
+```yaml
+# In your Sphinx configuration file (e.g., _config.yml)
+sphinx:
+    config:
+        prime_applets_base_url: "https://my-custom-url.com/applet/"
+```
+
 ## Parameters for an applet
 
 Some parameters can be set for an applet. Only the `url` and `name` parameters are required; the rest is optional. It is recommended to add a `status` to the applet, which can be `unreviewed`, `in-review` or `reviewed`.

@@ -115,7 +115,7 @@ class AppletDirective(MetadataFigure):
         else:
              url_params = ""
         if fig is None:
-            fig = DEFAULT_BASE_URL + url + "/image.png"
+            fig = self.env.config.prime_applets_base_url + url + "/image.png"
         
         iframe_class = self.options.get("class")  # expect a list/string of classes
 
@@ -194,7 +194,7 @@ class AppletDirective(MetadataFigure):
             self.options.get("width", None), self.options.get("height", None)
         )
 
-        base_url = os.environ.get("BASE_URL", DEFAULT_BASE_URL)
+        base_url = self.env.config.prime_applets_base_url
         full_url = f'{base_url}{url}{"?" if params else ""}{params}'
         applet_html = f"""
 			<div class="applet" style="{style}; ">
@@ -220,6 +220,7 @@ def setup(app):
 
     app.setup_extension('sphinx_metadata_figure')
     app.add_config_value("prime_applets_metadata", True, "env")
+    app.add_config_value("prime_applets_base_url", DEFAULT_BASE_URL, "env")
     app.add_directive("applet", AppletDirective)
     app.add_css_file('prime_applets.css')
     app.connect("build-finished",write_css)
