@@ -148,7 +148,7 @@ class AppletDirective(MetadataFigure):
                 self.options["copyright"] = self.options["copyright"] if "copyright" in self.options else f"© TU Delft {year}"
             else:
                 self.options["copyright"] = self.options["copyright"] if "copyright" in self.options else "© TU Delft"
-            self.options["source"] = self.options["source"] if "source" in self.options else f"[Open-LA-Applets]({repo_url})"
+            self.options["source"] = self.options["source"] if "source" in self.options else f"[PRIME-TU-Delft]({repo_url})"
             # force placement to caption, unless margin or admonition is used as default
             metadata_settings = getattr(config, 'metadata_figure_settings', {}) if config else {}
             style_settings = metadata_settings.get('style', {})
