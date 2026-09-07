@@ -50,7 +50,10 @@ def get_last_modified_date(file_url, token=TOKEN):
             return formatted_date
         else:
             return None
-    except:
+    except Exception as E:
+         logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
+         logger.info(f"                This raised an error of the type: {type(E).__name__}",color="fuchsia")
+         logger.info(f"                The error message is: {E}",color="fuchsia")
          return None
 
 def generate_style(height: Optional[str], width: Optional[str]):
