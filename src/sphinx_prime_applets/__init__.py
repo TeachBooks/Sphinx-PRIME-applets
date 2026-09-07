@@ -21,32 +21,35 @@ def get_last_modified_date(file_url, token=TOKEN):
     # to avoid rate limiting issues with the GitHub API, only proceed if a token is provided. Otherwise, return None
     if token is None:
         return None
-    # Extract parts from the GitHub URL
-    parts = file_url.split('/')
-    owner = parts[3]
-    repo = parts[4]
-    branch = parts[6]  # branch name comes after 'blob'
-    file_path = '/'.join(parts[7:])  # file path after branch
-    
-    # GitHub API endpoint
-    api_url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    params = {'path': file_path, 'sha': branch, 'per_page': 1}
-    
-    headers = {}
-    if token:
-        headers['Authorization'] = f'token {token}'
-    
-    response = requests.get(api_url, params=params, headers=headers)
-    response.raise_for_status()
-    
-    data = response.json()
-    if data:
-        # Extract the date and format it as YYYY-MM-DD
-        iso_date = data[0]['commit']['author']['date']
-        formatted_date = datetime.fromisoformat(iso_date.replace('Z', '+00:00')).strftime('%Y-%m-%d')
-        return formatted_date
-    else:
-        return None
+    try:
+        # Extract parts from the GitHub URL
+        parts = file_url.split('/')
+        owner = parts[3]
+        repo = parts[4]
+        branch = parts[6]  # branch name comes after 'blob'
+        file_path = '/'.join(parts[7:])  # file path after branch
+        
+        # GitHub API endpoint
+        api_url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        params = {'path': file_path, 'sha': branch, 'per_page': 1}
+        
+        headers = {}
+        if token:
+            headers['Authorization'] = f'token {token}'
+        
+        response = requests.get(api_url, params=params, headers=headers)
+        response.raise_for_status()
+        
+        data = response.json()
+        if data:
+            # Extract the date and format it as YYYY-MM-DD
+            iso_date = data[0]['commit']['author']['date']
+            formatted_date = datetime.fromisoformat(iso_date.replace('Z', '+00:00')).strftime('%Y-%m-%d')
+            return formatted_date
+        else:
+            return None
+    except:
+         return None
 
 def generate_style(height: Optional[str], width: Optional[str]):
 	'''
