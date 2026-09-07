@@ -12,12 +12,14 @@ from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
 
-TOKEN = os.getenv("GITHUB_TOKEN")
+TOKEN = os.getenv("GH_PAT") or os.getenv("GITHUB_TOKEN")
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
 
 def get_last_modified_date(file_url, token=TOKEN):
 
+    if token is None:
+        token = os.getenv("GH_PAT") or os.getenv("GITHUB_TOKEN")
     # to avoid rate limiting issues with the GitHub API, only proceed if a token is provided. Otherwise, return None
     if token is None:
         return None
