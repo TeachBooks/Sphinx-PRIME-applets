@@ -1,5 +1,5 @@
 import os
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 from docutils import nodes
 from docutils.parsers.rst import directives
 from typing import Optional
@@ -12,13 +12,14 @@ from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
 
-TOKEN = os.getenv("GITHUB_TOKEN")
+TOKEN = os.getenv("GH_PAT") or os.getenv("GITHUB_TOKEN")
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
 
 def get_last_modified_date(file_url, token=TOKEN):
 
-    # to avoid rate limiting issues with the GitHub API, only proceed if a token is provided. Otherwise, return None
+    if token is None:
+        token = os.getenv("GH_PAT") or os.getenv("GITHUB_TOKEN")
     if token is None:
         return None
     try:
@@ -28,6 +29,9 @@ def get_last_modified_date(file_url, token=TOKEN):
         repo = parts[4]
         branch = parts[6]  # branch name comes after 'blob'
         file_path = '/'.join(parts[7:])  # file path after branch
+        
+        # Decode URL-encoded characters (e.g., %5E -> ^)
+        file_path = unquote(file_path)
         
         # GitHub API endpoint
         api_url = f"https://api.github.com/repos/{owner}/{repo}/commits"
@@ -47,8 +51,12 @@ def get_last_modified_date(file_url, token=TOKEN):
             formatted_date = datetime.fromisoformat(iso_date.replace('Z', '+00:00')).strftime('%Y-%m-%d')
             return formatted_date
         else:
+            logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
             return None
-    except:
+    except Exception as E:
+         logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
+         logger.info(f"                This raised an error of the type: {type(E).__name__}",color="fuchsia")
+         logger.info(f"                The error message is: {E}",color="fuchsia")
          return None
 
 def generate_style(height: Optional[str], width: Optional[str]):
@@ -205,7 +213,7 @@ class AppletDirective(MetadataFigure):
 			<div class="applet" style="{style}; ">
 					<iframe class="prime-applet {iframe_class}" src="{full_url}" allow="fullscreen" loading="lazy" frameborder="0"></iframe>
 			</div>
-		"""
+		 """
         applet_node = nodes.raw(None, applet_html, format="html")
 
         # Add applet as the first child node of figure
@@ -265,4 +273,4 @@ def write_css(app: Sphinx,exc):
   staticdir = os.path.join(app.builder.outdir, '_static')
   filename = os.path.join(staticdir,'prime_applets.css')
   with open(filename,"w") as css:
-        css.write(CSS_content)	    
+        css.write(CSS_content)
