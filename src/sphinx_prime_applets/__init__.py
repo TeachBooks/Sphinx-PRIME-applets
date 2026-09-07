@@ -49,6 +49,7 @@ def get_last_modified_date(file_url, token=TOKEN):
             formatted_date = datetime.fromisoformat(iso_date.replace('Z', '+00:00')).strftime('%Y-%m-%d')
             return formatted_date
         else:
+            logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
             return None
     except Exception as E:
          logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
