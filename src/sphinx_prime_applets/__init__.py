@@ -6,58 +6,62 @@ from typing import Optional
 from sphinx.application import Sphinx
 from sphinx.directives.patches import Figure
 from sphinx_metadata_figure import MetadataFigure
-import requests
-from datetime import datetime
-from sphinx.util import logging
+import subprocess
+import tempfile
 
-logger = logging.getLogger(__name__)
-
-TOKEN = os.getenv("GH_PAT") or os.getenv("GITHUB_TOKEN")
 
 DEFAULT_BASE_URL = "https://openla.ewi.tudelft.nl/applet/"
 
-def get_last_modified_date(file_url, token=TOKEN):
-
-    if token is None:
-        token = os.getenv("GH_PAT") or os.getenv("GITHUB_TOKEN")
-    if token is None:
-        return None
+def get_last_modified_date(file_url: str, env) -> Optional[str]:
+    """Get last modified date using git only. Caches repo clone in env."""
     try:
-        # Extract parts from the GitHub URL
-        parts = file_url.split('/')
-        owner = parts[3]
-        repo = parts[4]
-        branch = parts[6]  # branch name comes after 'blob'
-        file_path = '/'.join(parts[7:])  # file path after branch
-        
-        # Decode URL-encoded characters (e.g., %5E -> ^)
-        file_path = unquote(file_path)
-        
-        # GitHub API endpoint
-        api_url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-        params = {'path': file_path, 'sha': branch, 'per_page': 1}
-        
-        headers = {}
-        if token:
-            headers['Authorization'] = f'token {token}'
-        
-        response = requests.get(api_url, params=params, headers=headers)
-        response.raise_for_status()
-        
-        data = response.json()
-        if data:
-            # Extract the date and format it as YYYY-MM-DD
-            iso_date = data[0]['commit']['author']['date']
-            formatted_date = datetime.fromisoformat(iso_date.replace('Z', '+00:00')).strftime('%Y-%m-%d')
-            return formatted_date
-        else:
-            logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
+        # Parse GitHub URL
+        parts = unquote(file_url).split('/blob/')
+        if len(parts) != 2:
             return None
-    except Exception as E:
-         logger.info(f"[PRIME Applets] The next url could not be resolved to a date: {file_url}",color="fuchsia")
-         logger.info(f"                This raised an error of the type: {type(E).__name__}",color="fuchsia")
-         logger.info(f"                The error message is: {E}",color="fuchsia")
-         return None
+        
+        owner_repo = parts[0].replace('https://github.com/', '')
+        branch_path = parts[1]
+        branch, filepath = branch_path.split('/', 1)
+        repo_url = f"https://github.com/{owner_repo}.git"
+        
+        # Use cached clone if available
+        if repo_url not in env.git_cache:
+            tmpdir = tempfile.mkdtemp(prefix='git_cache_')
+            subprocess.run(
+                ['git', 'clone', '--filter=blob:none',
+                 '--sparse', repo_url, tmpdir],
+                check=True, capture_output=True
+            )
+            env.git_cache[repo_url] = tmpdir
+        else:
+            tmpdir = env.git_cache[repo_url]
+        
+        # Get commit date
+        result = subprocess.run(
+            ['git', '-C', tmpdir, 'log', '-1', '--format=%ci', '--', filepath],
+            capture_output=True, text=True, check=True
+        )
+
+        date = result.stdout.strip().split(' ')[0]
+        return date
+    except Exception:
+        return None
+
+def _init_git_cache(app, env, docnames):
+    """Initialize git cache at start of build."""
+    if not hasattr(env, 'git_cache'):
+        env.git_cache = {}
+
+def _cleanup_git_cache(app, exception):
+    """Clean up temp directories after build."""
+    if hasattr(app.env, 'git_cache'):
+        import shutil
+        for tmpdir in app.env.git_cache.values():
+            try:
+                shutil.rmtree(tmpdir, ignore_errors=True)
+            except:
+                pass
 
 def generate_style(height: Optional[str], width: Optional[str]):
 	'''
@@ -152,7 +156,7 @@ class AppletDirective(MetadataFigure):
             self.options["author"] = self.options["author"] if "author" in self.options else "PRIME"
             self.options["license"] = self.options["license"] if "license" in self.options else "CC-BY"
             repo_url = f"https://github.com/PRIME-TU-Delft/Open-LA-Applets/blob/main/src/routes/applet/{url}"
-            last_modified_date = get_last_modified_date(repo_url)
+            last_modified_date = get_last_modified_date(repo_url,env)
             if last_modified_date:
                 self.options["date"] = self.options["date"] if "date" in self.options else last_modified_date
                 year = last_modified_date.split("-")[0]
@@ -237,6 +241,8 @@ def setup(app):
     app.add_directive("applet", AppletDirective)
     app.add_css_file('prime_applets.css')
     app.connect("build-finished",write_css)
+    app.connect("env-before-read-docs", _init_git_cache)  # Initialize cache
+    app.connect("build-finished", _cleanup_git_cache)
     return {
         "version": "0.1",
         "parallel_read_safe": True,
